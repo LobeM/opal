@@ -1,13 +1,10 @@
 import type { Metadata } from 'next';
-import { Manrope } from 'next/font/google';
+import { Manrope, DM_Sans } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
 import './globals.css';
 import { ThemeProvider } from '@/components/theme';
 
-const manrope = Manrope({
-  subsets: ['latin'],
-  variable: '--font-manrope',
-});
+const manrope = DM_Sans({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Opal',
@@ -21,11 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang='en'>
+      <html lang='en' suppressHydrationWarning>
         <body className={`${manrope.className} bg-[#171717]`}>
           <ThemeProvider
             attribute='class'
             defaultTheme='dark'
+            enableSystem
             disableTransitionOnChange
           >
             {children}
