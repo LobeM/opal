@@ -2,7 +2,7 @@ import { onAuthenticateUser } from '@/actions/user';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-const DashboardPage = async () => {
+const AuthCallbackPage = async () => {
   // Authentication
   const auth = await onAuthenticateUser();
 
@@ -15,4 +15,4 @@ const DashboardPage = async () => {
   }
 };
 
-export default DashboardPage;
+export default AuthCallbackPage;
