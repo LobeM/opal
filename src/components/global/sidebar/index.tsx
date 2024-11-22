@@ -15,6 +15,9 @@ import { WorkspaceProps } from '@/types/index.type';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import Modal from '../modal';
+import { PlusCircleIcon } from 'lucide-react';
+import Search from '../search';
 
 type Props = {
   activeWorkspaceId: string;
@@ -67,6 +70,23 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           </SelectGroup>
         </SelectContent>
       </Select>
+      <Modal
+        trigger={
+          <span className='text-sm cursor-pointer flex items-center justify-center bg-neutral-800/90 hover:bg-neutral-800/60 w-full rounded-sm p-[5px] gap-2'>
+            <PlusCircleIcon
+              size={15}
+              className='text-neutral-800/90 fill-neutral-500'
+            />
+            <span className='text-neutral-400 font-semibold text-xs'>
+              Invite To Workspace
+            </span>
+          </span>
+        }
+        title='Invite To Workspace'
+        description='Invite other users to your workspace'
+      >
+        <Search workspaceId={activeWorkspaceId} />
+      </Modal>
     </div>
   );
 };
