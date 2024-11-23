@@ -1,3 +1,4 @@
+import { useMutationData } from '@/hooks/use-mutation-data';
 import { useSearch } from '@/hooks/use-search';
 import React from 'react';
 
@@ -10,6 +11,9 @@ const Search = ({ workspaceId }: Props) => {
     'get-users',
     'USERS'
   );
+
+  // WIP: Wire up sending invitations
+  //   const {mutate, isPending} = useMutationData(['invite-member'], (data: {recieverId: string; email:string})=> inviteMembers())
   return <div>Search</div>;
 };
 
