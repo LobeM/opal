@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import React from 'react';
@@ -32,7 +33,7 @@ const SidebarItem = ({ icon, title, href, selected, notifications }: Props) => {
           </span>
         </div>
         {notifications !== undefined && notifications > 0 && (
-          <span className='text-xs'>{notifications}</span>
+          <Badge className='text-xs'>{notifications}</Badge>
         )}
       </Link>
     </li>

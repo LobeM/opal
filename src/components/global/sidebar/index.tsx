@@ -16,11 +16,16 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import Modal from '../modal';
-import { PlusCircleIcon } from 'lucide-react';
+import { MenuIcon, PlusCircleIcon } from 'lucide-react';
 import Search from '../search';
 import { MENU_ITEMS } from '@/constants';
 import SidebarItem from './sidebar-item';
 import { getNotifications } from '@/actions/user';
+import WorkspacePlaceholder from './workspace-placeholder';
+import GlobalCard from '../global-card';
+import { Button } from '@/components/ui/button';
+import Loader from '../loader';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 type Props = {
   activeWorkspaceId: string;
@@ -49,9 +54,9 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
     (s) => s.id === activeWorkspaceId
   );
 
-  return (
+  const SidebarSection = (
     <div className='bg-[#111111] flex-none relative p-4 h-full w-[250px] flex flex-col gap-4 items-center overflow-hidden'>
-      <div className='bg-[#111111] p-4 flex gap-2 justify-center items-center mb-4 absolute top-0 left-0 right-0'>
+      <div className='bg-[#111111] p-4 flex gap-2 justify-center items-center mb-4 absolute top-0 left-0 right-0 '>
         <Image src='/opal-logo.svg' alt='opal-logo' width={40} height={40} />
         <p className='text-2xl'>Opal</p>
       </div>
@@ -126,6 +131,86 @@ const Sidebar = ({ activeWorkspaceId }: Props) => {
           ))}
         </ul>
       </nav>
+
+      <Separator className='w-4/5' />
+      <p className='w-full text-[#9d9d9d] font-bold mt-4'>Workspaces</p>
+
+      {workspace.workspace.length === 1 && workspace.members.length === 0 && (
+        <div className='w-full mt-[-10px]'>
+          <p className='text-[#3c3c3c] font-medium text-sm'>
+            {workspace.subscription?.plan === 'FREE'
+              ? 'Upgrade to create workspaces'
+              : 'No Workspaces'}
+          </p>
+        </div>
+      )}
+
+      <nav className='w-full'>
+        <ul className='h-[150px] overflow-auto overflow-x-hidden fade-layer'>
+          {workspace.workspace.length > 0 &&
+            workspace.workspace.map(
+              (item) =>
+                item.type !== 'PERSONAL' && (
+                  <SidebarItem
+                    key={item.id}
+                    href={`/dashboard/${item.id}`}
+                    selected={pathname == `/dashboard/${item.id}`}
+                    title={item.name}
+                    icon={
+                      <WorkspacePlaceholder>
+                        {item.name.charAt(0)}
+                      </WorkspacePlaceholder>
+                    }
+                  />
+                )
+            )}
+          {workspace.members.length > 0 &&
+            workspace.members.map((item) => (
+              <SidebarItem
+                key={item.Workspace.id}
+                href={`/dashboard/${item.Workspace.id}`}
+                selected={pathname == `/dashboard/${item.Workspace.id}`}
+                title={item.Workspace.name}
+                icon={
+                  <WorkspacePlaceholder>
+                    {item.Workspace.name.charAt(0)}
+                  </WorkspacePlaceholder>
+                }
+              />
+            ))}
+        </ul>
+      </nav>
+      <Separator className='w-4/5' />
+      {workspace.subscription?.plan === 'FREE' && (
+        <GlobalCard
+          title='Upgrade to Pro'
+          description=' Unlock AI features like transcription, AI summary, and more.'
+        >
+          <Button className='text-sm w-full mt-2'>
+            <Loader state={false}>Upgrade</Loader>
+          </Button>
+        </GlobalCard>
+      )}
+    </div>
+  );
+
+  return (
+    <div className='full'>
+      {/* Infobar */}
+      {/* sheet mobile and desktop */}
+      <div className='md:hidden flex my-4'>
+        <Sheet>
+          <SheetTrigger asChild className='ml-2'>
+            <Button variant='ghost' className='mt-[2px]'>
+              <MenuIcon />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side='left' className='p-0 w-fit h-full'>
+            {SidebarSection}
+          </SheetContent>
+        </Sheet>
+      </div>
+      <div className='md:block hidden h-full'>{SidebarSection}</div>
     </div>
   );
 };
