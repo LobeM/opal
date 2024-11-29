@@ -20,23 +20,23 @@ const CreateWorkspace = () => {
     };
   };
 
-  //   if (plan.subscription?.plan === 'FREE') return <></>;
+  if (plan.subscription?.plan === 'FREE') return <></>;
 
-  //   if (plan.subscription?.plan === 'PRO')
-  return (
-    <Modal
-      title='Create a Workspace'
-      description='This action cannot be undone. This will permanently delete your account and remove your data from our servers'
-      trigger={
-        <Button className='bg-[#1D1D1D] text-[#707070] flex items-center gap-2 py-6 px-4'>
-          <FolderPlusDuotine />
-          Create a Workspace
-        </Button>
-      }
-    >
-      <WorkspaceForm />
-    </Modal>
-  );
+  if (plan.subscription?.plan === 'PRO')
+    return (
+      <Modal
+        title='Create a Workspace'
+        description='This action cannot be undone. This will permanently delete your account and remove your data from our servers'
+        trigger={
+          <Button className='bg-[#1D1D1D] text-[#707070] flex items-center gap-2 py-6 px-4'>
+            <FolderPlusDuotine />
+            Create a Workspace
+          </Button>
+        }
+      >
+        <WorkspaceForm />
+      </Modal>
+    );
 };
 
 export default CreateWorkspace;
