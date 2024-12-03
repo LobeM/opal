@@ -46,16 +46,11 @@ const Folder = ({ id, name, optimistic, count }: Props) => {
   };
 
   const updateFolderName = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (inputRef.current && folderCardRef.current) {
-      if (
-        !inputRef.current.contains(e.target as Node | null) &&
-        !folderCardRef.current.contains(e.target as Node | null)
-      ) {
-        if (inputRef.current.value) {
-          mutate({ name: inputRef.current.value });
-        } else {
-          Renamed();
-        }
+    if (inputRef.current) {
+      if (inputRef.current.value) {
+        mutate({ name: inputRef.current.value, id });
+      } else {
+        Renamed();
       }
     }
   };
@@ -65,6 +60,7 @@ const Folder = ({ id, name, optimistic, count }: Props) => {
       ref={folderCardRef}
       onClick={handleFolderClick}
       className={cn(
+        optimistic && 'opacity-60',
         'flex hover:bg-neutral-800 cursor-pointer transition duration-150 items-center gap-2 justify-between min-w-[250px] py-4 px-4 rounded-lg border'
       )}
     >
