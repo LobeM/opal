@@ -5,7 +5,10 @@ import { usePathname, useRouter } from 'next/dist/client/components/navigation';
 import React, { useRef, useState } from 'react';
 import Loader from '../loader';
 import FolderDuotone from '@/components/icons/folder-duotone';
-import { useMutationData } from '@/hooks/use-mutation-data';
+import {
+  useMutationData,
+  useMutationDataState,
+} from '@/hooks/use-mutation-data';
 import { renameFolders } from '@/actions/workspace';
 import { Input } from '@/components/ui/input';
 
@@ -31,10 +34,12 @@ const Folder = ({ id, name, optimistic, count }: Props) => {
   // Optimistic
   const { mutate, isPending } = useMutationData(
     ['rename-folders'],
-    (data: { name: string }) => renameFolders(id, name),
+    (data: { name: string }) => renameFolders(id, data.name),
     'workspace-folders',
     Renamed
   );
+
+  const { latestVariables } = useMutationDataState(['rename-folders']);
 
   const handleFolderClick = () => {
     router.push(`${pathname}/folder/${id}`);
@@ -82,7 +87,11 @@ const Folder = ({ id, name, optimistic, count }: Props) => {
               className='text-neutral-300'
               onDoubleClick={handleNameDoubleClick}
             >
-              {name}
+              {latestVariables &&
+              latestVariables.status === 'pending' &&
+              latestVariables.variables.id === id
+                ? latestVariables.variables.name
+                : name}
             </p>
           )}
 
