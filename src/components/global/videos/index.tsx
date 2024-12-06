@@ -14,23 +14,6 @@ type Props = {
   workspaceId: string;
 };
 
-const mockVideo = {
-  User: {
-    firstname: 'John',
-    lastname: 'Doe',
-    image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
-  },
-  id: 'vid_123456789',
-  processing: false,
-  Folder: {
-    id: 'folder_987654321',
-    name: 'Project Demos',
-  },
-  createdAt: new Date('2024-03-15T10:30:00Z'),
-  title: 'Product Feature Overview',
-  source: 'https://example.com/storage/videos/product-demo.mp4',
-};
-
 const index = ({ folderId, videosKey, workspaceId }: Props) => {
   // WIP: Add videos logic
   const { data: videoData } = useQueryData([videosKey], () =>
@@ -53,14 +36,13 @@ const index = ({ folderId, videosKey, workspaceId }: Props) => {
             : 'grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
         )}
       >
-        {/* {videosStatus === 200 ? (
+        {videosStatus === 200 ? (
           videos.map((video) => (
             <VideoCard key={video.id} workspaceId={workspaceId} {...video} />
           ))
         ) : (
           <p className='text-[#bdbdbd]'>No videos in workspace.</p>
-        )} */}
-        <VideoCard workspaceId={workspaceId} {...mockVideo} />
+        )}
       </section>
     </div>
   );

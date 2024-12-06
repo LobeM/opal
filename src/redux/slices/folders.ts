@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type initialStateProps = {
   folders: ({
@@ -21,7 +21,7 @@ export const Folders = createSlice({
   name: 'folders',
   initialState,
   reducers: {
-    FOLDERS: (state, action) => {
+    FOLDERS: (state, action: PayloadAction<initialStateProps>) => {
       return { ...action.payload };
     },
   },

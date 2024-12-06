@@ -6,15 +6,19 @@ import useZodForm from './use-zod-form';
 import { moveVideoSchema } from '@/components/forms/change-video-location/schema';
 
 export const useMoveVideos = (videoId: string, currentWorkspace: string) => {
-  // Get state redux
+  //get state redux
   const { folders } = useAppSelector((state) => state.FolderReducer);
   const { workspaces } = useAppSelector((state) => state.WorkSpaceReducer);
 
   // fetching states
   const [isFetching, setIsFetching] = useState(false);
-  // state folders
+  //stat folders
   const [isFolders, setIsFolders] = useState<
-    | ({ _count: { videos: number } } & {
+    | ({
+        _count: {
+          videos: number;
+        };
+      } & {
         id: string;
         name: string;
         createdAt: Date;
@@ -23,31 +27,26 @@ export const useMoveVideos = (videoId: string, currentWorkspace: string) => {
     | undefined
   >(undefined);
 
-  // use mutation data optimistic
+  //use mutation data optimisc
   const { mutate, isPending } = useMutationData(
     ['change-video-location'],
     (data: { folder_id: string; workspace_id: string }) =>
       moveVideoLocation(videoId, data.workspace_id, data.folder_id)
   );
-
-  // use zod form
+  //usezodform
   const { errors, onFormSubmit, watch, register } = useZodForm(
     moveVideoSchema,
     mutate,
-    {
-      folder_id: null,
-      workspace_id: currentWorkspace,
-    }
+    { folder_id: null, workspace_id: currentWorkspace }
   );
 
-  // fetchfolders with a use effect
-  const fetchFolders = async (workspaceId: string) => {
+  //fetchfolders with a use effeect
+  const fetchFolders = async (workspace: string) => {
     setIsFetching(true);
-    const folders = await getWorkspaceFolders(workspaceId);
+    const folders = await getWorkspaceFolders(workspace);
     setIsFetching(false);
     setIsFolders(folders.data);
   };
-
   useEffect(() => {
     fetchFolders(currentWorkspace);
   }, []);
@@ -56,17 +55,18 @@ export const useMoveVideos = (videoId: string, currentWorkspace: string) => {
     const workspace = watch(async (value) => {
       if (value.workspace_id) fetchFolders(value.workspace_id);
     });
+
     return () => workspace.unsubscribe();
   }, [watch]);
 
   return {
-    isFetching,
-    isFolders,
+    onFormSubmit,
+    errors,
+    register,
     isPending,
     folders,
     workspaces,
-    errors,
-    onFormSubmit,
-    register,
+    isFetching,
+    isFolders,
   };
 };
