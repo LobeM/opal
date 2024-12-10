@@ -29,8 +29,6 @@ const Folder = ({ id, name, optimistic, count }: Props) => {
   const Rename = () => setOnRename(true);
   const Renamed = () => setOnRename(false);
 
-  // WIP: add loading states
-
   // Optimistic
   const { mutate, isPending } = useMutationData(
     ['rename-folders'],
@@ -69,7 +67,7 @@ const Folder = ({ id, name, optimistic, count }: Props) => {
         'flex hover:bg-neutral-800 cursor-pointer transition duration-150 items-center gap-2 justify-between min-w-[250px] py-4 px-4 rounded-lg border'
       )}
     >
-      <Loader state={false}>
+      <Loader state={isPending}>
         <div className='flex flex-col gap-[1px]'>
           {onRename ? (
             <Input

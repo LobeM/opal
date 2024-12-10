@@ -15,7 +15,6 @@ type Props = {
 };
 
 const index = ({ folderId, videosKey, workspaceId }: Props) => {
-  // WIP: Add videos logic
   const { data: videoData } = useQueryData([videosKey], () =>
     getAllUserVideos(folderId)
   );

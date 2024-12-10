@@ -11,6 +11,7 @@ import { truncateString } from '@/lib/utils';
 import TabMenu from '../../tabs';
 import AiTools from '../../ai-tools';
 import VideoTranscript from '../../video-transcript';
+import { TabsContent } from '@/components/ui/tabs';
 
 type Props = {
   videoId: string;
@@ -18,6 +19,7 @@ type Props = {
 
 const VideoPreview = ({ videoId }: Props) => {
   // WIP: Setup notify first view
+  // WIP: Setup activity
   const router = useRouter();
 
   const { data } = useQueryData(['preview-video'], () =>
@@ -105,6 +107,9 @@ const VideoPreview = ({ videoId }: Props) => {
               plan={video.User?.subscription?.plan!}
             />
             <VideoTranscript transcript={video.description!} />
+            <TabsContent value='Activity' className='rounded-xl'>
+              Make changes to your video here
+            </TabsContent>
           </TabMenu>
         </div>
       </div>
