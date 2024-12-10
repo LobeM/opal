@@ -10,6 +10,7 @@ import RichLink from '../rich-link';
 import { truncateString } from '@/lib/utils';
 import TabMenu from '../../tabs';
 import AiTools from '../../ai-tools';
+import VideoTranscript from '../../video-transcript';
 
 type Props = {
   videoId: string;
@@ -96,13 +97,14 @@ const VideoPreview = ({ videoId }: Props) => {
         <div>
           <TabMenu
             defaultValue='Ai tools'
-            triggers={['Ai tools', 'Trascript', 'Activity']}
+            triggers={['Ai tools', 'Transcript', 'Activity']}
           >
             <AiTools
               videoId={videoId}
               trial={video.User?.trial!}
               plan={video.User?.subscription?.plan!}
             />
+            <VideoTranscript transcript={video.description!} />
           </TabMenu>
         </div>
       </div>
