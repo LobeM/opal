@@ -208,3 +208,71 @@ export const getFirstView = async () => {
     return { status: 500 };
   }
 };
+
+export const createCommentAndReply = async (
+  userId: string,
+  comment: string,
+  videoId: string,
+  commentId?: string
+) => {
+  try {
+    if (commentId) {
+      const reply = await client.comment.update({
+        where: {
+          id: commentId,
+        },
+        data: {
+          reply: {
+            create: {
+              comment,
+              userId,
+              videoId,
+            },
+          },
+        },
+      });
+      if (reply) return { status: 200, data: 'Reply posted' };
+      return { status: 404 };
+    }
+
+    const newComment = await client.video.update({
+      where: {
+        id: videoId,
+      },
+      data: {
+        Comment: {
+          create: {
+            comment,
+            userId,
+          },
+        },
+      },
+    });
+    if (newComment) return { status: 200, data: 'New comment added' };
+    return { status: 404 };
+  } catch (error) {
+    return { status: 500 };
+  }
+};
+
+export const getVideoComments = async (Id: string) => {
+  try {
+    const comments = await client.comment.findMany({
+      where: {
+        OR: [{ videoId: Id }, { commentId: Id }],
+        commentId: null,
+      },
+      include: {
+        reply: {
+          include: {
+            User: true,
+          },
+        },
+        User: true,
+      },
+    });
+    return { status: 200, data: comments };
+  } catch (error) {
+    return { status: 500 };
+  }
+};

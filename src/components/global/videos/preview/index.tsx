@@ -12,6 +12,7 @@ import TabMenu from '../../tabs';
 import AiTools from '../../ai-tools';
 import VideoTranscript from '../../video-transcript';
 import { TabsContent } from '@/components/ui/tabs';
+import Activities from '../../activities';
 
 type Props = {
   videoId: string;
@@ -107,9 +108,10 @@ const VideoPreview = ({ videoId }: Props) => {
               plan={video.User?.subscription?.plan!}
             />
             <VideoTranscript transcript={video.description!} />
-            <TabsContent value='Activity' className='rounded-xl'>
-              Make changes to your video here
-            </TabsContent>
+            <Activities
+              author={video.User?.firstname as string}
+              videoId={videoId}
+            />
           </TabMenu>
         </div>
       </div>
