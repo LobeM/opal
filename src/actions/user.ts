@@ -168,3 +168,43 @@ export const getPaymentInfo = async () => {
     return { status: 500 };
   }
 };
+
+export const enableFirstView = async (state: boolean) => {
+  try {
+    const user = await currentUser();
+    if (!user) return { status: 403 };
+
+    const userData = await client.user.update({
+      where: {
+        clerkid: user.id,
+      },
+      data: {
+        firstView: state,
+      },
+    });
+    if (userData) return { status: 200, data: 'Settings updated' };
+    return { status: 404 };
+  } catch (error) {
+    return { status: 500 };
+  }
+};
+
+export const getFirstView = async () => {
+  try {
+    const user = await currentUser();
+    if (!user) return { status: 403 };
+
+    const userData = await client.user.findUnique({
+      where: {
+        clerkid: user.id,
+      },
+      select: {
+        firstView: true,
+      },
+    });
+    if (userData) return { status: 200, data: userData.firstView };
+    return { status: 404 };
+  } catch (error) {
+    return { status: 500 };
+  }
+};
