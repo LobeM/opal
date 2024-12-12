@@ -33,8 +33,13 @@ export const useSearch = (key: string, type: 'USERS') => {
     async ({ queryKey }) => {
       if (type === 'USERS') {
         const users = await searchUsers(queryKey[1] as string);
-        if (users?.status === 200) setOnUsers(users.data);
+        if (users?.status === 200) {
+          setOnUsers(users.data);
+          return users.data;
+        }
+        return [];
       }
+      return [];
     },
     false
   );

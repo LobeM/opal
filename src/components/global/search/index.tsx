@@ -7,6 +7,7 @@ import { useSearch } from '@/hooks/use-search';
 import { UserIcon } from 'lucide-react';
 import React from 'react';
 import Loader from '../loader';
+import { inviteMembers } from '@/actions/user';
 
 type Props = {
   workspaceId: string;
@@ -20,7 +21,11 @@ const Search = ({ workspaceId }: Props) => {
 
   // WIP: Wire up sending invitations
   //   WIP: Wire up invite button in UI
-  //   const {mutate, isPending} = useMutationData(['invite-member'], (data: {recieverId: string; email:string})=> inviteMembers())
+  const { mutate, isPending } = useMutationData(
+    ['invite-member'],
+    (data: { recieverId: string; email: string }) =>
+      inviteMembers(workspaceId, data.recieverId, data.email)
+  );
 
   return (
     <div className='flex flex-col gap-5'>
@@ -61,11 +66,11 @@ const Search = ({ workspaceId }: Props) => {
               </div>
               <div className='flex flex-1 justify-end items-center'>
                 <Button
-                  onClick={() => {}}
+                  onClick={() => mutate({ recieverId: user.id, email: query })}
                   variant='default'
                   className='w-5/12 font-bold'
                 >
-                  <Loader state={false} color='#000'>
+                  <Loader state={isPending} color='#000'>
                     Invite
                   </Loader>
                 </Button>
