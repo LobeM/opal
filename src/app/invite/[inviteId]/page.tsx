@@ -22,6 +22,15 @@ const InvitePage = async ({ params: { inviteId } }: Props) => {
     );
   }
 
+  if (invite.status === 409) {
+    return (
+      <div className='h-screen container flex flex-col gap-y-2 justify-center items-center'>
+        <h2 className='text-6xl font-bold text-white'>Already a member</h2>
+        <p>You are already a member of this workspace</p>
+      </div>
+    );
+  }
+
   if (invite.status === 200) return redirect('/auth/callback');
 };
 

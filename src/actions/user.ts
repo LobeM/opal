@@ -385,6 +385,7 @@ export const acceptInvite = async (inviteId: string) => {
   try {
     const user = await currentUser();
     if (!user) return { status: 404, data: 'Unauthorized' };
+
     const invitation = await client.invite.findUnique({
       where: {
         id: inviteId,
@@ -399,8 +400,28 @@ export const acceptInvite = async (inviteId: string) => {
       },
     });
 
-    if (user.id !== invitation?.reciever?.clerkid)
+    if (!invitation) return { status: 404, data: 'Invitation not found' };
+
+    if (user.id !== invitation.reciever?.clerkid) {
       return { status: 401, data: 'Unauthorized' };
+    }
+
+    // Check if user is already a member of the workspace
+    const existingMember = await client.member.findFirst({
+      where: {
+        User: {
+          clerkid: user.id,
+        },
+        workSpaceId: invitation.workSpaceId,
+      },
+    });
+
+    if (existingMember) {
+      return {
+        status: 409,
+        data: 'You are already a member of this workspace',
+      };
+    }
 
     const acceptInvite = client.invite.update({
       where: {
@@ -429,9 +450,22 @@ export const acceptInvite = async (inviteId: string) => {
       updateMember,
     ]);
 
-    if (membersTransaction) return { status: 200 };
-    return { status: 400 };
+    if (membersTransaction) {
+      return {
+        status: 200,
+        data: 'Successfully joined workspace',
+      };
+    }
+
+    return {
+      status: 400,
+      data: 'Failed to join workspace',
+    };
   } catch (error) {
-    return { status: 500 };
+    console.error('Error accepting invite:', error);
+    return {
+      status: 500,
+      data: 'Internal server error',
+    };
   }
 };
