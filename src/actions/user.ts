@@ -322,7 +322,7 @@ export const inviteMembers = async (
     if (senderInfo?.id) {
       const workspace = await client.workSpace.findUnique({
         where: {
-          id: senderInfo.id,
+          id: workspaceId,
         },
         select: {
           name: true,

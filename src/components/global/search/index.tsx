@@ -66,7 +66,9 @@ const Search = ({ workspaceId }: Props) => {
               </div>
               <div className='flex flex-1 justify-end items-center'>
                 <Button
-                  onClick={() => mutate({ recieverId: user.id, email: query })}
+                  onClick={() =>
+                    mutate({ recieverId: user.id, email: user.email })
+                  }
                   variant='default'
                   className='w-5/12 font-bold'
                 >
