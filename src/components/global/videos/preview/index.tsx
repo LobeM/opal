@@ -1,9 +1,9 @@
 'use client';
-import { getPreviewVideo } from '@/actions/workspace';
+import { getPreviewVideo, sendEmailForFirstView } from '@/actions/workspace';
 import { useQueryData } from '@/hooks/use-query-data';
 import { VideoProps } from '@/types/index.type';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 import CopyLink from '../copy-link';
 import { DownloadIcon } from 'lucide-react';
 import RichLink from '../rich-link';
@@ -19,13 +19,13 @@ type Props = {
 };
 
 const VideoPreview = ({ videoId }: Props) => {
-  // WIP: Setup notify first view
-  // WIP: Setup activity
   const router = useRouter();
 
   const { data } = useQueryData(['preview-video'], () =>
     getPreviewVideo(videoId)
   );
+
+  const notifyFirstView = async () => sendEmailForFirstView(videoId);
 
   const { data: video, status, author } = data as VideoProps;
   if (status !== 200) router.push('/');
@@ -33,6 +33,15 @@ const VideoPreview = ({ videoId }: Props) => {
   const daysAgo = Math.floor(
     (new Date().getTime() - video.createdAt.getTime()) / (1000 * 60 * 60 * 24)
   );
+
+  useEffect(() => {
+    if (video.views === 0) {
+      notifyFirstView();
+    }
+    return () => {
+      notifyFirstView();
+    };
+  }, []);
 
   return (
     <div className='grid grid-cols-1 xl:grid-cols-3 lg:py-10 overflow-y-auto gap-5'>
