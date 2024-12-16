@@ -2,7 +2,6 @@
 
 import { client } from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
-import exp from 'constants';
 import { sendEmail } from './user';
 
 export const verifyAccessToWorkspace = async (workspaceId: string) => {
