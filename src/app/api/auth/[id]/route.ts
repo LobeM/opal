@@ -54,7 +54,7 @@ export async function GET(
       },
     });
 
-    if (createUser) return NextResponse.json({ status: 200, user: createUser });
+    if (createUser) return NextResponse.json({ status: 201, user: createUser });
 
     return NextResponse.json({ status: 400 });
   } catch (error) {
