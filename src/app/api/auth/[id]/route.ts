@@ -6,7 +6,7 @@ export async function GET(
   req: NextRequest,
   { params: { id } }: { params: { id: string } }
 ) {
-  console.log('Enpoint hit ✅');
+  console.log('Endpoint hit ✅');
 
   try {
     const userProfile = await client.user.findUnique({
