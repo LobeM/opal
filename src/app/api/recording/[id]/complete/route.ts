@@ -6,30 +6,25 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    // WIP: Wire up AI agent
     const body = await req.json();
     const { id } = params;
 
-    const content = JSON.parse(body.content);
-
-    const transcribed = await client.video.update({
+    const completeProcessing = await client.video.update({
       where: {
         userId: id,
         source: body.filename,
       },
       data: {
-        title: content.title,
-        description: content.summary,
-        summery: body.transcript,
+        processing: false,
       },
     });
-    if (transcribed) {
-      console.log('🟢 Transcribed video');
+    if (completeProcessing) {
+      console.log('🟢 Completed processing video');
       return NextResponse.json({ status: 200 });
     }
     return NextResponse.json({ status: 400 });
   } catch (error) {
-    console.log('Error in transcribe video', error);
+    console.log('Error in complete video', error);
     return NextResponse.json({ status: 500 });
   }
 }
