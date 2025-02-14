@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Loader from '../loader';
 import CardMenu from './video-card-menu';
