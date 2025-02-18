@@ -1,4 +1,5 @@
 import { client } from '@/lib/prisma';
+import axios from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
@@ -25,7 +26,36 @@ export async function POST(
     });
     if (transcribed) {
       console.log('🟢 Transcribed video');
-      return NextResponse.json({ status: 200 });
+      const options = {
+        method: 'POST',
+        url: process.env.VOICEFLOW_KNOWLEDGE_BASE_API,
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          Authorization: process.env.VOICEFLOW_KNOWLEDGE_BASE_API,
+        },
+        data: {
+          data: {
+            schema: {
+              searchableFields: ['title', 'transcript'],
+              metadataFields: ['title', 'transcript'],
+            },
+            name: content.title,
+            items: [
+              {
+                title: content.title,
+                transcript: body.transcript,
+              },
+            ],
+          },
+        },
+      };
+
+      const updateKB = await axios.request(options);
+      if (updateKB.status === 200 || updateKB.status !== 200) {
+        console.log(updateKB.status);
+        return NextResponse.json({ status: 200 });
+      }
     }
     return NextResponse.json({ status: 400 });
   } catch (error) {
