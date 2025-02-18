@@ -5,6 +5,7 @@ import { currentUser } from '@clerk/nextjs/server';
 import { sendEmail } from './user';
 import { createClient, OAuthStrategy } from '@wix/sdk';
 import { items } from '@wix/data';
+import axios from 'axios';
 
 export const verifyAccessToWorkspace = async (workspaceId: string) => {
   try {
@@ -445,6 +446,21 @@ export const getWixContent = async () => {
     });
     if (video && video.length > 0) {
       return { status: 200, data: video };
+    }
+    return { status: 404 };
+  } catch (error) {
+    return { status: 500 };
+  }
+};
+
+export const howToPost = async () => {
+  try {
+    const response = await axios.get(process.env.CLOUD_WAYS_POST as string);
+    if (response.data) {
+      return {
+        title: response.data[0].title.rendered,
+        content: response.data[0].content.rendered,
+      };
     }
     return { status: 404 };
   } catch (error) {
